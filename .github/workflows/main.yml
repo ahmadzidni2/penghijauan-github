@@ -3,7 +3,8 @@ name: C1
 # Menjalankan secara otomatis setiap 4 jam
 on:
   schedule:
-    - cron: "0 */4 * * *" # Setiap 4 jam pada menit ke-0
+    # - cron: "0 */4 * * *" # Setiap 4 jam pada menit ke-0
+      - cron: "*/5 * * * *" 
   workflow_dispatch:
 
 jobs:
@@ -17,7 +18,7 @@ jobs:
         run: |
           export TZ="Asia/Jakarta"  # Mengatur zona waktu ke Asia/Jakarta (WIB)
           TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")  # Mendapatkan timestamp dalam format yang diinginkan (WIB)
-          echo "Last updated: $TIMESTAMP" > README.md  # Perbarui atau buat README.md dengan timestamp WIB
+          echo "Auto Commit By Github Action pada: $TIMESTAMP  #autohijau🗿" > README.md  # Perbarui atau buat README.md dengan timestamp WIB
 
       - name: Configure Git
         run: |
