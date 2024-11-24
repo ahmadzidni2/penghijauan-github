@@ -3,7 +3,7 @@ name: Auto Commit
 # Menjalankan secara otomatis setiap 4 jam
 on:
   schedule:
-    - cron: '*/5 * * * *'# Setiap 4 jam pada menit ke-0
+    - cron: '*/5 * * * *' # Setiap 4 jam pada menit ke-0
 
 jobs:
   update-repo:
