@@ -31,6 +31,7 @@ jobs:
       - name: Commit changes
         run: |
           git add README.md  # Menambahkan README.md ke staging area
+          TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")  # Mendapatkan timestamp dalam format yang diinginkan (WIB)
           git commit -S -m "Auto update README at $TIMESTAMP" || echo "No changes to commit"  # Commit dengan tanda tangan jika ada perubahan
 
       - name: Push changes
