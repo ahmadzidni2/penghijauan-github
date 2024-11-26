@@ -1,9 +1,9 @@
 name: C2
 
-# Menjalankan secara otomatis setiap 4 jam
+# Menjalankan secara otomatis setiap 8 jam
 on:
   schedule:
-    - cron: "0 */8 * * *" # Setiap 4 jam pada menit ke-0
+    - cron: "0 */8 * * *" # Setiap 8 jam pada menit ke-0
   workflow_dispatch:
 
 jobs:
