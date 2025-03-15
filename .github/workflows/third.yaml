@@ -1,4 +1,4 @@
-name: C3
+name: C2
 
 # Menjalankan secara otomatis setiap 8 jam
 on:
@@ -13,28 +13,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Update README with timestamp in WIB
-        run: |
-          export TZ="Asia/Jakarta"
-          TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
-          echo "Auto Commit By Github Action pada: $TIMESTAMP  #autohijau🗿" > README.md
-
       - name: Configure Git
         run: |
           git config user.name "ahmadzidni2"
           git config user.email "146934364+ahmadzidni2@users.noreply.github.com"
 
-      - name: Commit changes 100 kali dengan UUID
+      - name: Commit changes 100 kali dengan UUID (Ditimpa)
         run: |
-          git add README.md
           export TZ="Asia/Jakarta"
-          for i in {1..100}
+          for i in {1..10}
           do
             TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
-            UUID=$(uuidgen)  # Generate UUID unik
-            echo "Commit ke-$i dengan UUID: $UUID pada $TIMESTAMP" >> README.md  # Tambahkan ke README
+            UUID=$(uuidgen)  # Generate UUID unik setiap commit
+            echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿" > README.md  # Timpa isi README.md
             git add README.md
-            git commit -m "Auto Commit By Github Action pada: $TIMESTAMP, Commit id:{$UUID} #autohijau🗿"
+            git commit -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿"
+            sleep 2
           done
 
       - name: Push changes
