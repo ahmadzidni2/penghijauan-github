@@ -18,7 +18,7 @@ jobs:
           git config user.name "ahmadzidni2"
           git config user.email "146934364+ahmadzidni2@users.noreply.github.com"
 
-      - name: Commit changes 100 kali dengan UUID (Ditimpa)
+      - name: Commit changes 10 kali dengan UUID (Ditimpa)
         run: |
           export TZ="Asia/Jakarta"
           for i in {1..10}
