@@ -1,6 +1,5 @@
 name: C3
 
-# Menjalankan secara otomatis setiap 8 jam
 on:
   schedule:
     - cron: "0 */6 * * *" # Setiap 6 jam pada menit ke-0
@@ -13,13 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Import GPG Key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
+          GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format LONG | grep sec | awk '{print $2}' | cut -d'/' -f2)
+          echo "GPG_KEY_ID=${GPG_KEY_ID}" >> $GITHUB_ENV
+
       - name: Configure Git
         run: |
-          git config user.name "ahmadzidni2"
-          git config user.email "146934364+ahmadzidni2@users.noreply.github.com"
-          git config user.signingkey C589E22CB0FC4A20  # Menambahkan GPG key ID
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import --batch --yes  # Mengimpor GPG key dari secret
-          gpg --list-secret-keys  # Menampilkan kunci rahasia untuk verifikasi
+          git config --global user.name "ahmadzidni2"
+          git config --global user.email "146934364+ahmadzidni2@users.noreply.github.com"
+          git config --global user.signingkey "$GPG_KEY_ID"
+          git config --global commit.gpgsign true
 
       - name: Commit changes 10 kali dengan UUID (Ditimpa)
         run: |
@@ -27,8 +31,8 @@ jobs:
           for i in {1..10}
           do
             TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
-            UUID=$(uuidgen)  # Generate UUID unik setiap commit
-            echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿" > README.md  # Timpa isi README.md
+            UUID=$(uuidgen)
+            echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿" > README.md
             git add README.md
             git commit -S -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿"
             sleep 2
@@ -41,8 +45,7 @@ jobs:
           git push origin main
 
 
-
-
+# Without GPG
 # name: C3
 
 # # Menjalankan secara otomatis setiap 8 jam
