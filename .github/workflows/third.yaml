@@ -12,6 +12,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Remove old GPG keys
+        run: |
+          rm -rf ~/.gnupg
+          mkdir -m 700 ~/.gnupg
+          gpg --list-keys || true
+
       - name: Import GPG Key
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import
