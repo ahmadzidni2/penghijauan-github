@@ -28,7 +28,22 @@ jobs:
             TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
             UUID=$(uuidgen)
             echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿" > README.md
-            git add README.md
+            # Buat uuid.go (kode Golang)
+            cat <<EOF > uuid.go
+            package main
+  
+            import (
+                "fmt"
+                "github.com/google/uuid"
+            )
+  
+            func main() {
+                id := uuid.New()
+                fmt.Println("Generated UUID:", $UUID)
+            }
+            EOF
+  
+            git add README.md uuid.go
             git commit -S -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿"
             sleep 2
           done
