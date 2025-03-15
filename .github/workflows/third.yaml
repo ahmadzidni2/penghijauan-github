@@ -12,16 +12,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         
-      - name: Import GPG Key
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import --batch --yes
-
       - name: Configure Git
         run: |
           git config --global user.name "ahmadzidni2"
           git config --global user.email "146934364+ahmadzidni2@users.noreply.github.com"
           git config --global user.signingkey "C589E22CB0FC4A20"
-          git config --global commit.gpgsign true
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import --batch --yes  # Mengimpor GPG key dari secret
+          gpg --list-secret-keys  # Menampilkan kunci rahasia untuk verifikasi
 
       - name: Commit changes 10 kali dengan UUID (Ditimpa)
         run: |
