@@ -1,64 +1,50 @@
-name: Auto commit
+name: C3
 
 on:
-
-  push:
-    branches:
-      - main
-      
   schedule:
-  - cron: "0 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 * * *" # See https://crontab.guru/#0_7,9,11,17,20_*_*_*
+    - cron: "0 */6 * * *" # Setiap 6 jam pada menit ke-0
+  workflow_dispatch:
 
 jobs:
-  auto_commit:
+  update-repo:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2      
-        with:
-         persist-credentials: false
-         fetch-depth: 0
-
-      - name: Modify last update
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Configure Git
         run: |
-          d=`date '+%Y-%m-%dT%H:%M:%SZ'`
-          echo $d > LAST_UPDATED
-          
-      - name: Commit changes
-        run: |
-          set -o pipefail
-          git config --global --add safe.directory /github/workspace
           git config --global user.name "ahmadzidni2"
           git config --global user.email "146934364+ahmadzidni2@users.noreply.github.com"
           git config --global user.signingkey "C589E22CB0FC4A20"
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import --batch --yes  # Mengimpor GPG key dari secret
           gpg --list-secret-keys  # Menampilkan kunci rahasia untuk verifikasi
-          git config --global --add safe.directory /github/workspace
-          git add -A
-          
-          arr[0]="chore(bot): 😂 auto commit"
-          arr[1]="chore(bot): 😱 auto commit"
-          arr[2]="chore(bot): 👿 auto commit"
-          arr[3]="chore(bot): 💩 auto commit"
-          arr[4]="chore(bot): 🙏 auto commit"
-          arr[5]="chore(bot): 🙈 auto commit"
-          arr[6]="chore(bot): 🐐 auto commit"
-          arr[7]="chore(bot): 🤖 auto commit"
-          arr[8]="chore(bot): 🟩 auto commit"
-          arr[9]="chore(bot): 👻 auto commit"
-          
-          rand=$[$RANDOM % ${#arr[@]}]
-          
-          git commit -m -S "${arr[$rand]}"
-          
-      - name: GitHub Push
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          force: true
-          directory: "."
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Commit changes UUID
+        run: |
+          export TZ="Asia/Jakarta"
+          for i in {1..2}
+          do
+            TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
+            UUID=$(uuidgen)
+            echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID $UUID #autohijau🗿" > README.md
+            echo "console.log($UUID)" > uuid.ts
+            git add README.md uuid.ts
+            git commit -S -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID $UUID #autohijau🗿"
+            sleep 2
+          done
+
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin main
+
+
+# Without GPG
 # name: C3
 
+# # Menjalankan secara otomatis setiap 8 jam
 # on:
 #   schedule:
 #     - cron: "0 */6 * * *" # Setiap 6 jam pada menit ke-0
@@ -70,14 +56,11 @@ jobs:
 #     steps:
 #       - name: Checkout repository
 #         uses: actions/checkout@v3
-        
+
 #       - name: Configure Git
 #         run: |
-#           git config --global user.name "ahmadzidni2"
-#           git config --global user.email "146934364+ahmadzidni2@users.noreply.github.com"
-#           git config --global user.signingkey "C589E22CB0FC4A20"
-#           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --import --batch --yes  # Mengimpor GPG key dari secret
-#           gpg --list-secret-keys  # Menampilkan kunci rahasia untuk verifikasi
+#           git config user.name "ahmadzidni2"
+#           git config user.email "146934364+ahmadzidni2@users.noreply.github.com"
 
 #       - name: Commit changes 10 kali dengan UUID (Ditimpa)
 #         run: |
@@ -85,11 +68,10 @@ jobs:
 #           for i in {1..10}
 #           do
 #             TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
-#             UUID=$(uuidgen)
-#             echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID $UUID #autohijau🗿" > README.md
-#             echo "console.log($UUID)" > uuid.ts
-#             git add README.md uuid.ts
-#             git commit -S -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID $UUID #autohijau🗿"
+#             UUID=$(uuidgen)  # Generate UUID unik setiap commit
+#             echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿" > README.md  # Timpa isi README.md
+#             git add README.md
+#             git commit -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿"
 #             sleep 2
 #           done
 
@@ -98,44 +80,3 @@ jobs:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #         run: |
 #           git push origin main
-
-
-# # Without GPG
-# # name: C3
-
-# # # Menjalankan secara otomatis setiap 8 jam
-# # on:
-# #   schedule:
-# #     - cron: "0 */6 * * *" # Setiap 6 jam pada menit ke-0
-# #   workflow_dispatch:
-
-# # jobs:
-# #   update-repo:
-# #     runs-on: ubuntu-latest
-# #     steps:
-# #       - name: Checkout repository
-# #         uses: actions/checkout@v3
-
-# #       - name: Configure Git
-# #         run: |
-# #           git config user.name "ahmadzidni2"
-# #           git config user.email "146934364+ahmadzidni2@users.noreply.github.com"
-
-# #       - name: Commit changes 10 kali dengan UUID (Ditimpa)
-# #         run: |
-# #           export TZ="Asia/Jakarta"
-# #           for i in {1..10}
-# #           do
-# #             TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S %Z")
-# #             UUID=$(uuidgen)  # Generate UUID unik setiap commit
-# #             echo "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿" > README.md  # Timpa isi README.md
-# #             git add README.md
-# #             git commit -m "Auto Commit By Github Action pada: $TIMESTAMP, COMMIT_UUID:$UUID #autohijau🗿"
-# #             sleep 2
-# #           done
-
-# #       - name: Push changes
-# #         env:
-# #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# #         run: |
-# #           git push origin main
